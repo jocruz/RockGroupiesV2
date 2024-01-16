@@ -1,17 +1,6 @@
 import { useEffect, useState } from "react";
 
-import {
-  Appearance,
-  loadStripe,
-  StripeElementsOptions,
-} from "@stripe/stripe-js";
-import {
-  ThirdwebNftMedia,
-  useAddress,
-  useContract,
-  useDisconnect,
-  useNFT,
-} from "@thirdweb-dev/react";
+import { useAddress, useContract, useDisconnect } from "@thirdweb-dev/react";
 
 import type { NextPage } from "next";
 import { EDITION_ADDRESS } from "../constants/addresses";
@@ -23,40 +12,28 @@ import axios from "axios";
 import Checkout from "../components/Checkout";
 import Signup from "../components/Signup";
 
-
 const Home: NextPage = () => {
   const address = useAddress();
   const disconnect = useDisconnect();
 
+  //These states are passed onto the SignUp Component;
   const [email, setEmail] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
 
   const [customerId, setCustomerId] = useState<string>("");
+
+  //These states are passed onto the Checkout Component
   const { contract } = useContract(EDITION_ADDRESS, "signature-drop");
-  const { data: nft, error } = useNFT(contract, 2);
   const [clientSecret, setClientSecret] = useState("");
+
   const [message, setMessage] = useState<string | null>(null);
   const connect = useConnect();
 
   const magicLinkConfig = magicLink({
     apiKey: process.env.NEXT_PUBLIC_MAGIC_LINK_API_KEY as string,
   });
-
-  const stripe = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-  );
-
-  const appearance: Appearance = {
-    theme: "stripe",
-    labels: "above",
-  };
-
-  const options: StripeElementsOptions = {
-    clientSecret,
-    appearance,
-  };
 
   useEffect(() => {
     disconnect();
@@ -73,6 +50,10 @@ const Home: NextPage = () => {
             customerId,
           });
 
+          console.log(
+            "Hello this is: paymentinent: ",
+            response.data.client_secret
+          );
           setClientSecret(response.data.client_secret);
         } catch (err) {
           console.log(err);
@@ -85,9 +66,13 @@ const Home: NextPage = () => {
       const updateCustomer = async () => {
         try {
           const response = await axios.post("/api/stripe_intent", {
-            body: address,
+            address,
             customerId,
           });
+          console.log(
+            "Hello this is: updateCustomer: ",
+            response.data.client_secret
+          );
           setClientSecret(response.data.client_secret);
         } catch (err) {
           console.log(err);
@@ -98,6 +83,7 @@ const Home: NextPage = () => {
   }, [address, customerId]);
 
   const handleLogin = async () => {
+    console.log("I have been clicked");
     if (firstName && lastName && phoneNumber && email) {
       try {
         const response = await axios.post("/api/create_customer", {

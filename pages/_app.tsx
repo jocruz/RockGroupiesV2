@@ -1,7 +1,6 @@
-import { ChainId, ThirdwebProvider, magicLink } from "@thirdweb-dev/react";
-
-import type { AppProps } from "next/app";
 import "../styles/globals.css";
+import { ChainId, ThirdwebProvider, magicLink } from "@thirdweb-dev/react";
+import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 
 // This is the chainId your dApp will work on.
@@ -21,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThirdwebProvider
         activeChain={activeChainId}
         supportedWallets={[magicLinkConfig]}
-        clientId={process.env.THIRDWEB_CLIENT as string}
+        clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT as string}
       >
         <Component {...pageProps} />
       </ThirdwebProvider>

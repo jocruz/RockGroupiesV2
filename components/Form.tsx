@@ -5,7 +5,7 @@ import {
 } from "@stripe/react-stripe-js";
 import styles from "../styles/Home.module.css";
 import React, { useEffect, useState } from "react";
-import { EDITION_ADDRESS } from "../constants/addresses";
+import { Text, Button, Box, VStack } from "@chakra-ui/react";
 
 const Form = () => {
   const elements = useElements();
@@ -55,7 +55,7 @@ const Form = () => {
     e.preventDefault();
 
     if (!stripe || !elements) {
-      return console.log("not loaded");
+      return <h2>Something went wrong..</h2>;
     }
 
     setIsLoading(true);
@@ -70,35 +70,26 @@ const Form = () => {
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message);
       setShowPaymentForm(false); // hide the form
+      console.log(error.message);
     } else {
       setMessage("An unexpected error occurred.");
       setShowPaymentForm(false); // hide the form
+      console.log(error.message);
     }
 
     setIsLoading(false);
   };
 
   return (
-    <>
-      {message ? (
-        <>
-          {isSuccess && (
-            <a
-              href={`https://testnets.opensea.io/assets/mumbai/${EDITION_ADDRESS}/0`}
-              className={styles.mainButton}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Check out your NFT
-            </a>
-          )}
-          <h1>{message}</h1>
-        </>
-      ) : null}
-
+    <div>
       {showPaymentForm ? (
         <form className={styles.PaymentForm} onSubmit={handleSubmit}>
-          <PaymentElement options={{paymentMethodOrder: ['card']}} />
+          <PaymentElement
+            options={{
+              paymentMethodOrder: ["card"],
+              layout: { type: "tabs" },
+            }}
+          />
           <button
             className={`${styles.mainButton} ${styles.payButton}`}
             disabled={isLoading || !stripe || !elements}
@@ -114,7 +105,7 @@ const Form = () => {
           Try again
         </button>
       )}
-    </>
+    </div>
   );
 };
 

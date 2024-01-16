@@ -37,7 +37,7 @@ const Signup: React.FC<SignUpProps> = ({
           fontWeight={600}
           fontSize={{ base: "2xl", sm: "2xl", md: "3xl" }} // Responsive font size
           textAlign="center"
-          color="green.600" // Example color, choose what fits your design
+          color="green.600"
           letterSpacing="wider" // Adjust letter spacing
           my={4} // Margin for top and bottom
           p={2} // Padding
@@ -48,6 +48,7 @@ const Signup: React.FC<SignUpProps> = ({
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            console.log("sign up submitted");
             handleLogin();
           }}
           style={{
@@ -73,7 +74,7 @@ const Signup: React.FC<SignUpProps> = ({
           <FormControl id="text">
             <FormLabel textAlign={"center"}>First Name</FormLabel>
             <Input
-              type="email"
+              type="text"
               onChange={(e) => setFirstName(e.target.value)}
               className={styles.inputField}
               placeholder="First Name"
@@ -82,7 +83,7 @@ const Signup: React.FC<SignUpProps> = ({
           <FormControl id="text">
             <FormLabel textAlign={"center"}>Last Name</FormLabel>
             <Input
-              type="email"
+              type="text"
               onChange={(e) => setLastName(e.target.value)}
               className={styles.inputField}
               placeholder="Last Name"
@@ -100,6 +101,7 @@ const Signup: React.FC<SignUpProps> = ({
           </FormControl>
 
           <Button
+            type="submit"
             fontFamily="heading"
             mt={8}
             w="full"
@@ -110,7 +112,7 @@ const Signup: React.FC<SignUpProps> = ({
               boxShadow: "xl",
             }}
           >
-            Submit
+            Submit  
           </Button>
         </form>
       </VStack>
