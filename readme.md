@@ -43,13 +43,29 @@ This project showcases the integration of Stripe for processing payments in an N
 
 ## How It Works
 
-1. **User Registration** (`Signup.tsx`): Users input personal information (name, email, phone) which is used by `create_customer.ts` to register them in Stripe. If a customer already exists, it checks for previous purchases to prevent duplication.
+1. **Initialization** (`_app.tsx`):
+    - Sets up the application environment using `ThirdwebProvider` for blockchain interactions and `ChakraProvider` for UI styling.
+    - Configures `magicLink` for authentication, supporting seamless login and wallet connection on the Polygon blockchain.
 
-2. **Creating Payment Intent** (`stripe_intent.ts`): After registration, the system generates a Stripe payment intent. This process reserves the NFT for purchase and prepares the transaction, setting the stage for payment completion in the `Checkout.tsx` component.
+2. **User Interaction** (`index.tsx`):
+    - Users begin their journey on the home page, where they can sign up or log in via the `Signup` component.
+    - Upon successful login, `create_customer.ts` is invoked to either fetch or create a new Stripe customer record, linking the user's session with their Stripe and blockchain identities.
 
-3. **Payment and Checkout** (`Checkout.tsx` & `Form.tsx`): In the checkout phase, users complete the payment process. The Stripe Elements UI is rendered for secure card information entry and transaction authorization.
+3. **User Registration** (`Signup.tsx`):
+    - Collects user information (name, email, phone) and creates a new Stripe customer if one doesn’t already exist, handled by `create_customer.ts`.
+    - Checks for previous NFT purchases to prevent duplicate transactions.
 
-4. **Finalizing the Transaction** (`webhook.ts`): Stripe sends a webhook event upon successful payment. This endpoint validates the payment and triggers the Thirdweb SDK to mint and allocate the NFT to the purchaser’s address, completing the NFT acquisition process.
+4. **Payment Intent Creation** (`stripe_intent.ts` & `index.tsx`):
+    - After registration, `stripe_intent.ts` generates a payment intent for the NFT purchase, securing the item for checkout.
+    - The user’s Stripe customer ID is used to link the payment with their account.
+
+5. **Checkout Process** (`Checkout.tsx` & `Form.tsx`):
+    - The `Checkout` component displays the NFT details and leads the user to the Stripe payment form managed in `Form.tsx`.
+    - Users complete the payment, and Stripe processes the transaction securely.
+
+6. **Payment Confirmation and NFT Minting** (`webhook.ts`):
+    - Stripe's webhook sends notifications of payment status to `webhook.ts`.
+    - Upon successful payment, the Thirdweb SDK mints the NFT and transfers it to the user’s wallet, finalizing the purchase.
 
 ## 🚀 API Endpoints Overview
 
